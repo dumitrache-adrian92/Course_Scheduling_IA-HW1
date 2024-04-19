@@ -1,7 +1,7 @@
 import yaml
 import argparse
 import sys
-from utils import read_yaml_file, prof_initials, pretty_print_timetable
+from utils import read_yaml_file, get_profs_initials, pretty_print_timetable
 
 
 ##################### MACROURI #####################
@@ -42,19 +42,6 @@ def parse_subject_room_prof(subject_room_prof : str, nick_to_prof : dict):
     prof = nick_to_prof[prof]
     return subject, room, prof
 
-def get_profs_from_initials(profs : dict):
-    '''
-    Se întoarce un dicționar care are ca și chei prescurtarile profesorilor si ca si valori numele lor.
-    '''
-    initials_to_prof = {}
-    prof_to_initials = {}
-    initial_count = {}
-    for prof in profs:
-        initials = prof_initials(prof, prof_to_initials, initial_count)
-        initials_to_prof[initials] = prof
-
-    return initials_to_prof
-
 
 def get_timetable(timetable_specs : dict, output_name : str, debug_flag : bool = False):
     '''
@@ -62,7 +49,7 @@ def get_timetable(timetable_specs : dict, output_name : str, debug_flag : bool =
     '''
     timetable = {day : {eval(interval) : {} for interval in timetable_specs[INTERVALE]} for day in timetable_specs[ZILE]}
 
-    initials_to_prof = get_profs_from_initials(timetable_specs[PROFESORI])
+    _, initials_to_prof = get_profs_initials(timetable_specs[PROFESORI])
     
     if debug_flag:
         print(initials_to_prof)
@@ -233,7 +220,7 @@ if __name__ == '__main__':
     timetable = get_timetable(timetable_specs, output_name, debug_flag)
 
     if debug_flag:
-        print(pretty_print_timetable(timetable))
+        print(pretty_print_timetable(timetable, input_name))
 
     print('\n----------- Constrângeri obligatorii -----------')
     constrangeri_incalcate = check_mandatory_constraints(timetable, timetable_specs)
