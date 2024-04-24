@@ -51,16 +51,16 @@ def get_profs_initials(profs : list) -> dict:
     for prof in profs:
         name_components = prof.split(' ')
         initials = name_components[0][0] + name_components[1][0]
-        
+
         if initials in initials_count:
             initials_count[initials] += 1
             initials += str(initials_count[initials])
         else:
             initials_count[initials] = 1
-        
+
         initials_to_prof[initials] = prof
         prof_to_initials[prof] = initials
-        
+
     return prof_to_initials, initials_to_prof
 
 
@@ -75,7 +75,7 @@ def allign_string_with_spaces(s : str, max_len : int, allignment_type : str = 'c
 
     if len_str >= max_len:
         raise ValueError('Lungimea string-ului este mai mare decât lungimea maximă dată')
-    
+
 
     if allignment_type == 'left':
         s = 6 * ' ' + s
@@ -108,10 +108,10 @@ def pretty_print_timetable_aux_zile(timetable : {str : {(int, int) : {str : (str
     first_line_len = 187
     delim = '-' * first_line_len + '\n'
     table_str = table_str + delim
-    
+
     for interval in timetable['Luni']:
         s_interval = '|'
-        
+
         crt_str = allign_string_with_spaces(f'{interval[0]} - {interval[1]}', max_len, 'center')
 
         s_interval += crt_str
@@ -131,7 +131,7 @@ def pretty_print_timetable_aux_zile(timetable : {str : {(int, int) : {str : (str
                 else:
                     prof, subject = classes[classroom]
                     s_interval += allign_string_with_spaces(f'{subject} : ({classroom} - {profs_to_initials[prof]})', max_len, 'left')
-            
+
             s_interval += '|\n'
         table_str += s_interval + delim
 
@@ -156,7 +156,7 @@ def pretty_print_timetable_aux_intervale(timetable : {(int, int) : {str : {str :
     first_line_len = 187
     delim = '-' * first_line_len + '\n'
     table_str = table_str + delim
-    
+
     for interval in timetable:
         s_interval = '|' + allign_string_with_spaces(f'{interval[0]} - {interval[1]}', max_len, 'center')
 
@@ -175,7 +175,7 @@ def pretty_print_timetable_aux_intervale(timetable : {(int, int) : {str : {str :
                 else:
                     prof, subject = classes[classroom]
                     s_interval += allign_string_with_spaces(f'{subject} : ({classroom} - {profs_to_initials[prof]})', max_len, 'left')
-            
+
             s_interval += '|\n'
         table_str += s_interval + delim
 
@@ -185,7 +185,7 @@ def pretty_print_timetable(timetable : dict, input_path : str) -> str:
     '''
     Poate primi fie un dictionar de zile conținând dicționare de intervale conținând dicționare de săli cu tupluri (profesor, materie)
     fie un dictionar de intervale conținând dictionare de zile conținând dicționare de săli cu tupluri (profesor, materie)
-    
+
     Pentru cazul în care o sală nu este ocupată la un moment de timp, se așteaptă 'None' în valoare, în loc de tuplu
     '''
     if 'Luni' in timetable:
